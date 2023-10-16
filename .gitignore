@@ -1,0 +1,6 @@
+.env
+.cache
+*.json
+*.bak
+__pycache__/
+downloads/
