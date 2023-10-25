@@ -22,7 +22,7 @@ class Spotify:
         count = 0
         with tqdm(total=total) as t:
             while count < total:
-                new_tracks = self.sp.playlist_items(uri, limit=LIMIT, offset=0)                    
+                new_tracks = self.sp.playlist_items(uri, limit=LIMIT, offset=count)                    
                 for track in new_tracks["items"]:
                     track = track["track"]
                     all_tracks.append(track)

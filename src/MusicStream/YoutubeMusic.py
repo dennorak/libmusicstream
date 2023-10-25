@@ -44,10 +44,13 @@ class YoutubeMusic:
         for track in tqdm(tracks):
             while active_count() > num_threads-2: sleep(0.5)
             Thread(target=self.search, args=(track,)).start()
-            while active_count() <= 2: sleep(1)
+        while active_count() <= 2: sleep(1)
 
     def download(self, tracks, num_threads=10):
         for track in tqdm(tracks, position=1):
             while active_count() > num_threads-2: sleep(0.5)
-            Thread(target=self.ydl.download, args=(self.base_url + track["yid"],)).start()
+            try:
+                Thread(target=self.ydl.download, args=(self.base_url + track["yid"],)).start()
+            except KeyError:
+                continue
             while active_count() <= 2: sleep(1)

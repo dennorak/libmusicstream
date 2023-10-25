@@ -1,4 +1,5 @@
 from YoutubeMusic import YoutubeMusic
+from Metadata import *
 from Playlist import Playlist
 from Spotify import Spotify
 from os.path import exists
@@ -10,7 +11,7 @@ THREAD_COUNT = 10
 def main():
     sp = Spotify()
     ytm = YoutubeMusic()
-    playlist = sp.get_playlist("0Ng0C62gBR7izpiEcKLIMy")
+    playlist = sp.get_playlist("5ITsgpdHuP4vJgSRAeC1Dq")
     all_tracks = [] # to be saved as cache
     new_tracks = [] # to be downloaded, dupes in all_tracks
 
@@ -38,6 +39,8 @@ def main():
     with open("items.json", "w+") as f:
         f.write(json.dumps(all_tracks))
     ytm.download(new_tracks, THREAD_COUNT)
+
+    threaded_add_metadata(new_tracks)
 
 if __name__ == "__main__":
     main()
