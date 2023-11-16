@@ -3,22 +3,39 @@ from Metadata import *
 from Playlist import Playlist
 from Spotify import Spotify
 from os.path import exists
+import inquirer
 import json
 import copy
 
 THREAD_COUNT = 10
+READ_LIMIT = 50
 
 def main():
-    sp = Spotify()
+    sp = Spotify(READ_LIMIT)
     ytm = YoutubeMusic()
-    playlist = sp.get_playlist("5ITsgpdHuP4vJgSRAeC1Dq")
+
+    playlists = sp.get_user_playlists()
+    # ask for playlist selection
+    questions = [
+        inquirer.List('playlist',
+                message="Pick a playlist",
+                choices=playlists.keys(),
+        ),
+    ]
+    # get the selected uri, set cache name
+    answers = inquirer.prompt(questions)
+    # playlist = playlists[answers["playlist"]]
+    playlist = sp.get_playlist(playlists[answers["playlist"]])
+    # playlist = Playlist(answers["playlist"], playlist_data)
+    cache_name = playlist.name + ".json"
+
     all_tracks = [] # to be saved as cache
     new_tracks = [] # to be downloaded, dupes in all_tracks
 
     # load/update cache
-    if exists("items.json"):    
+    if exists(cache_name):    
         print("Loading from cache")
-        with open("items.json", "r") as f:
+        with open(cache_name, "r") as f:
             try:
                 cached_tracks = json.loads(f.read())
                 uris = []

@@ -13,9 +13,9 @@ def add_metadata(track):
 
         file = eyed3.load(join("downloads", files[0]))
         file.tag.title = track["name"]
-        file.tag.artist = ";".join(track["artists"], )
+        file.tag.artist = ",".join(track["artists"], )
         file.tag.album = track["album"]["name"]
-        file.tag.album_artist = ";".join(track["album"]["artists"])
+        file.tag.album_artist = ",".join(track["album"]["artists"])
         file.tag.track_num = track["track_number"]
         file.tag.save()
     except KeyError:

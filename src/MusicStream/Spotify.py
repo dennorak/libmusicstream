@@ -5,7 +5,8 @@ from tqdm import tqdm
 import spotipy
 
 class Spotify:
-    def __init__(self):
+    def __init__(self, read_limit):
+        self.read_limit = read_limit
         config = dotenv_values()
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
             client_id=config['CLIENT_ID'],
@@ -31,6 +32,22 @@ class Spotify:
                 if total == -1 or count >= total:
                     break
         return Playlist(name, all_tracks)
+    
+    # returns: list[ { <name>:<id> } ]
+    def get_user_playlists(self):
+        playlists = {}
+        total = self.sp.current_user_playlists(limit=1)["total"]
+        count = 0
+        with tqdm(total=total) as t:
+            while count < total:
+                read_playlists = self.sp.current_user_playlists(limit=self.read_limit, offset=count)
+                for playlist in read_playlists["items"]:
+                    playlists[playlist["name"]] = playlist["id"]
+                t.update(len(read_playlists["items"]))
+                count += self.read_limit
+                if total == -1 or count >= total:
+                    break
+        return playlists
 
     def get_user_favs(self):
         all_tracks = []
