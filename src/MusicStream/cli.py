@@ -53,7 +53,7 @@ def main():
 
     # download
     ytm.threaded_search(new_tracks, THREAD_COUNT)
-    with open("items.json", "w+") as f:
+    with open(cache_name, "w+") as f:
         f.write(json.dumps(all_tracks))
     ytm.download(new_tracks, THREAD_COUNT)
 
