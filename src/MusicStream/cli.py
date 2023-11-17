@@ -3,6 +3,7 @@ from Metadata import *
 from Playlist import Playlist
 from Spotify import Spotify
 from os.path import exists
+from os import mkdir
 import inquirer
 import json
 import copy
@@ -27,7 +28,9 @@ def main():
     # playlist = playlists[answers["playlist"]]
     playlist = sp.get_playlist(playlists[answers["playlist"]])
     # playlist = Playlist(answers["playlist"], playlist_data)
-    cache_name = playlist.name + ".json"
+    cache_name = "cache/" + playlist.name + ".json"
+    # create cache dir
+    if not exists("cache/"): mkdir("cache")
 
     all_tracks = [] # to be saved as cache
     new_tracks = [] # to be downloaded, dupes in all_tracks
