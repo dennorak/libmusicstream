@@ -52,6 +52,9 @@ def main():
         all_tracks = new_tracks
 
     # download
+    if len(new_tracks) == 0:
+        print("no new tracks!")
+        return
     ytm.threaded_search(new_tracks, THREAD_COUNT)
     with open(cache_name, "w+") as f:
         f.write(json.dumps(all_tracks))
